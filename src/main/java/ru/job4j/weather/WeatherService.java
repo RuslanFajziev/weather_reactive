@@ -40,15 +40,9 @@ public class WeatherService {
     }
 
     public Mono<Weather> findMax() {
-        int maxTemp = 0;
-        int index = 0;
-        for (Weather weather : weathers.values()) {
-            int currentTemp = weather.getTemperature();
-            if (currentTemp > maxTemp) {
-                maxTemp = currentTemp;
-                index = weather.getId();
-            }
-        }
-        return Mono.justOrEmpty(weathers.get(index));
+        var optionalWeather = weathers.values()
+                .stream().max(Weather::compareTo);
+        var rsl = optionalWeather.orElse(new Weather(1, "Null City", 100));
+        return Mono.justOrEmpty(rsl);
     }
 }
