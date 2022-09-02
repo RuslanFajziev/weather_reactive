@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -40,8 +40,9 @@ public class WeatherService {
     }
 
     public Mono<Weather> findMax() {
+        Comparator<Weather> comparatorWeather = Comparator.comparingInt(Weather::getTemperature);
         var optionalWeather = weathers.values()
-                .stream().max(Weather::compareTo);
+                .stream().max(comparatorWeather);
         var rsl = optionalWeather.orElse(new Weather(1, "Null City", 100));
         return Mono.justOrEmpty(rsl);
     }
